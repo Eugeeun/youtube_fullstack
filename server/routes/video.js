@@ -53,6 +53,19 @@ router.post('/uploadVideo', (req, res) => {
   });
 });
 
+router.get('/getVideos', (req, res) => {
+  /** 비디오를 DB에서 가져와 클라이언트에 보냄 */
+
+  // populate를 해주는 이유는 writer의 모든 정보를 가져오기 위함임
+  // 해주지 않으면 id밖에 못 가져옴
+  Video.find()
+    .populate('writer')
+    .exec((err, videos) => {
+      if (err) return res.status(400).json(err);
+      res.status(200).json({ success: true, videos });
+    });
+});
+
 router.post('/thumbnail', (req, res) => {
   /** 썸네일 생성을 하고 비디오 러닝타임을 가져오기 */
 
