@@ -24,25 +24,27 @@ function LandingPage() {
     let seconds = Math.floor(video.duration - minutes * 60);
     return (
       <Col lg={6} md={8} xs={24}>
-        <a href={`/video/post/${video._id}`} style={{ margin: '1px' }}>
-          <div
-            style={{
-              position: 'relative',
-              marginRight: '40px',
-            }}
-          >
-            <img
-              src={`http://localhost:5000/${video.thumbnail}`}
-              alt='thumbnail'
-              style={{ width: '100%', borderRadius: '20px' }}
-            />
-            <div className='duration'>
-              <span>
-                {minutes}:{seconds}
-              </span>
+        <div style={{ position: 'relative' }}>
+          <a href={`/video/${video._id}`} style={{ margin: '1px' }}>
+            <div
+              style={{
+                position: 'relative',
+                marginRight: '40px',
+              }}
+            >
+              <img
+                src={`http://localhost:5000/${video.thumbnail}`}
+                alt='thumbnail'
+                style={{ width: '100%', borderRadius: '20px' }}
+              />
+              <div className='duration'>
+                <span>
+                  {minutes}:{seconds}
+                </span>
+              </div>
             </div>
-          </div>
-        </a>
+          </a>
+        </div>
         <br />
         <Meta
           avatar={<Avatar src={video.writer.image} />}
