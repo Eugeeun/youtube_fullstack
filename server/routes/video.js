@@ -5,6 +5,7 @@ const { Video } = require('../models/Video');
 const { auth } = require('../middleware/auth');
 const multer = require('multer');
 let ffmpeg = require('fluent-ffmpeg');
+const { Subscriber } = require('../models/Subscriber');
 
 /** Storage multer config */
 let storage = multer.diskStorage({
@@ -64,6 +65,29 @@ router.get('/getVideos', (req, res) => {
       if (err) return res.status(400).json(err);
       res.status(200).json({ success: true, videos });
     });
+});
+
+router.post('/getSubscriptionVideos', (req, res) => {
+  // 자신의 아이디를 가지고 구독하는 사람들을 찾음
+  Subscriber.find({ userFrom: req.body.userFrom }).exec(
+    (err, subscriberInfo) => {
+      if (err) return res.status(400).json(err);
+      let subscribedUser = [];
+      subscriberInfo.map((subscriber, index) =>
+        subscribedUser.push(subscriber.userTo)
+      );
+
+      // 찾은 사람들의 비디오를 가지고 온다.
+      // 그냥 req.body.id 이런식으로 하면 한 명밖에 가져오지 못함
+      // 여러 명을 가져오기 위해서는 몽고DB의 $in을 이용하여 해결가능
+      Video.find({ writer: { $in: subscribedUser } })
+        .populate('writer')
+        .exec((err, videos) => {
+          if (err) return res.status(400).json(err);
+          res.status(200).json({ success: true, videos });
+        });
+    }
+  );
 });
 
 router.post('/getVideoDetail', (req, res) => {
