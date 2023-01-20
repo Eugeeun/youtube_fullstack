@@ -34,6 +34,16 @@ function Subscribe(userInfo) {
       userFrom: userInfo.userFrom,
     };
 
+    if (!subscribeVar.userFrom) {
+      alert('로그인 후 이용해 주세요');
+      return;
+    }
+
+    if (subscribeVar.userTo === subscribeVar.userFrom) {
+      alert('자기 자신은 구독할 수 없습니다.');
+      return;
+    }
+
     if (isSubscribed) {
       Axios.post('/api/subscribe/unSubscribe', subscribeVar).then(response => {
         if (response.data.success) {

@@ -4,6 +4,7 @@ import Axios from 'axios';
 import { useParams } from 'react-router-dom';
 import SideVideo from './Sections/SideVideo';
 import Subscribe from './Sections/Subscribe';
+import Comment from './Sections/Comment';
 
 function VideoDetailPage() {
   const videoId = useParams().videoId;
@@ -44,6 +45,7 @@ function VideoDetailPage() {
             />
           </List.Item>
           {/* Comments */}
+          <Comment />
         </div>
       </Col>
       <Col lg={6} xs={24}>
