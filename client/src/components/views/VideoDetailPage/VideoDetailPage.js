@@ -9,6 +9,7 @@ import Comment from './Sections/Comment';
 function VideoDetailPage() {
   const videoId = useParams().videoId;
   const [videoDetail, setVideoDetail] = useState([]);
+  const [comments, setComments] = useState([]);
   useEffect(() => {
     Axios.post('/api/video/getVideoDetail', { videoId: videoId }).then(
       response => {
@@ -19,7 +20,21 @@ function VideoDetailPage() {
         }
       }
     );
+
+    Axios.post('/api/comment/getComments', { videoId: videoId }).then(
+      response => {
+        if (response.data.success) {
+          setComments(response.data.comments);
+        } else {
+          alert('코멘트 정보를 가져오는 것을 실패하였습니다.');
+        }
+      }
+    );
   }, []);
+
+  const refreshFunc = newComment => {
+    setComments(comments.concat(newComment));
+  };
 
   return videoDetail.writer ? (
     <Row gutter={[16, 16]}>
@@ -45,7 +60,11 @@ function VideoDetailPage() {
             />
           </List.Item>
           {/* Comments */}
-          <Comment />
+          <Comment
+            refreshFunc={refreshFunc}
+            commentLists={comments}
+            postId={videoId}
+          />
         </div>
       </Col>
       <Col lg={6} xs={24}>
