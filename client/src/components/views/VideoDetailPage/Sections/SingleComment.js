@@ -18,7 +18,7 @@ function SingleComment(props) {
   };
 
   const onSubmit = event => {
-    event.preventDefalt();
+    event.preventDefault();
     const commentData = {
       content: commentValue,
       writer: user.userData._id,
@@ -29,6 +29,7 @@ function SingleComment(props) {
     Axios.post('/api/comment/saveComment', commentData).then(response => {
       if (response.data.success) {
         setCommentValue('');
+        setOpenReply(false);
         props.refreshFunc(response.data.result);
       } else {
         alert('코멘트를 저장하지 못했습니다.');
@@ -38,7 +39,6 @@ function SingleComment(props) {
 
   const actions = [
     <span onClick={onClickReplyOpen} key='comment-basic-reply-to'>
-      {' '}
       Reply to
     </span>,
   ];
@@ -49,10 +49,10 @@ function SingleComment(props) {
         style={{ width: '100%', borderRadius: '5px' }}
         onChange={onHandleChange}
         value={commentValue}
-        placeholder='코멘트를 작성해 주세요'
+        placeholder='답글을 작성해 주세요'
       ></textarea>
       <br />
-      <button style={{ width: '20%', height: '52px' }} onClick>
+      <button style={{ width: '20%', height: '52px' }} onClick={onSubmit}>
         Submit
       </button>
     </form>

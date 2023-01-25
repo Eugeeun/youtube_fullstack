@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Axios from 'axios';
 import { useSelector } from 'react-redux';
 import SingleComment from './SingleComment';
+import ReplyComment from './ReplyComment';
 
 function Comment(props) {
   const videoId = props.postId;
@@ -36,18 +37,28 @@ function Comment(props) {
       <br />
       <p>Replies</p>
       <hr />
+      {/* 아래와 같이 하면 가독성에 문제가 되므로 얘도 따로 컴포넌트로 빼는 것이 좋아보임 */}
       {props.commentLists &&
         props.commentLists.map(
           (comment, index) =>
             !comment.responseTo && (
-              <SingleComment
-                key={index}
-                refreshFunc={props.refreshFunc}
-                comment={comment}
-                postId={props.postId}
-              />
+              <React.Fragment>
+                <SingleComment
+                  key={index}
+                  refreshFunc={props.refreshFunc}
+                  comment={comment}
+                  postId={props.postId}
+                />
+                <ReplyComment
+                  refreshFunc={props.refreshFunc}
+                  parentCommentId={comment._id}
+                  postId={videoId}
+                  commentLists={props.commentLists}
+                />
+              </React.Fragment>
             )
         )}
+
       <form style={{ display: 'flex' }} onSubmit={onSubmit}>
         <textarea
           style={{ width: '100%', borderRadius: '5px' }}
